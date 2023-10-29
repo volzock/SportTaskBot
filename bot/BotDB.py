@@ -2,8 +2,8 @@ from sqlalchemy import create_engine, insert, text, select, MetaData, Table, Col
 from sqlalchemy.orm import sessionmaker
 
 class BotData:
-    def __init__(self):
-        self.engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+    def __init__(self, db_url: str):
+        self.engine = create_engine(db_url, echo=True)
         self.conn = self.engine.connect()
         self.metadata_obj = MetaData()
         self.create_bot_database()
@@ -17,6 +17,7 @@ class BotData:
             Column('id', Integer, primary_key = True),
             Column('telegram_id', Integer),
             Column('name', String),
+            Column('surname', String),
         )
     
         #conn.execute(f"CREATE TABLE public.role(id integer, name text, PRIMARY KEY (id)); ALTER TABLE IF EXISTS public.role OWNER to {user};")
@@ -103,9 +104,32 @@ class BotData:
             s = insert(role_table).values(id = 3, name = 'contestant')
             self.conn.execute(s)
             self.conn.commit()
+    
+    def insert_into_table(self, table_name: str, records: list):
+        table = Table(table_name, self.metadata_obj, autoload_with=self.engine)
+        self.conn.execute(insert(table), records)
+        self.conn.commit()
+    
+    def table_sql_request(self, request: str) -> list:
+        return self.conn.execute(text(request)).fetchall()
+        
+    '''
+    def select_from_table(self, table_name: str, where_parametrs: str):
+        sql = "SELECT * FROM "+table_name+' WHERE '+where_parametrs 
+        return self.conn.execute(text(sql)).fetchall()
 
+    
+
+    def update_in_table(self, table_name: str, records: list, where_parametrs: str):
+        sql = "UPDATE "+table_name+' SET '+where_parametrs 
+        return self.conn.execute(text(sql)).fetchall()
+        #self.conn.execute(update(table).where(exec("table.c.%s" % where_parametrs)), records)
+    '''
+
+'''
 if __name__ == '__main__':
-    bot_db = BotData()
-    
-    
+    bot_db = BotData("sqlite+pysqlite:///:memory:")
+    bot_db.insert_into_table('user', [{'id': 546, 'telegram_id': 123, 'name': 'Test', 'surname': 'Test'}])
+    print(bot_db.table_sql_request('SELECT * FROM user WHERE id = 546'))
  
+''' 
