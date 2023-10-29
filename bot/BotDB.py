@@ -110,19 +110,21 @@ class BotData:
         self.conn.execute(insert(table), records)
         self.conn.commit()
     
-    def table_sql_request(self, request: str) -> list:
+    def sql_select_request(self, request: str) -> list:
         return self.conn.execute(text(request)).fetchall()
         
+    def table_update(self, request: str):
+        self.conn.execute(text(request))
+        self.conn.commit()
+    
     '''
     def select_from_table(self, table_name: str, where_parametrs: str):
         sql = "SELECT * FROM "+table_name+' WHERE '+where_parametrs 
         return self.conn.execute(text(sql)).fetchall()
 
-    
-
     def update_in_table(self, table_name: str, records: list, where_parametrs: str):
         sql = "UPDATE "+table_name+' SET '+where_parametrs 
-        return self.conn.execute(text(sql)).fetchall()
+        self.conn.execute(text(sql))
         #self.conn.execute(update(table).where(exec("table.c.%s" % where_parametrs)), records)
     '''
 
