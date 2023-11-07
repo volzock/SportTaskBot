@@ -28,7 +28,7 @@ def start_func(message):
                                       "После регистрации ознакомьтесь с командой /help", reply_markup=keyboard)
     with Session(db) as session:
         if session.query(User).filter_by(telegram_id=int(message.from_user.id)).first() is None:
-            msg = bot.send_message(message.chat.id, "Для регистрации ведите сначало имя, затем фамилию через пробел")
+            msg = bot.send_message(message.chat.id, "Для регистрации ведите сначало фамилию, затем имя через пробел")
             bot.register_next_step_handler(msg, __register)
         else:
             bot.send_message(message.chat.id, "Вы уже зарегестрированы")
@@ -36,8 +36,8 @@ def start_func(message):
 
 def __register(message):
     try:
-        name, sname = message.text.split()
-        bot.send_message(message.chat.id, f"Привет {name} {sname}!")
+        sname, name = message.text.split()
+        bot.send_message(message.chat.id, f"Привет {sname} {name}!")
         with Session(db) as session:
             user = User(telegram_id=int(message.from_user.id), name=name, surname=sname)
             session.add(user)
