@@ -2,7 +2,7 @@
 name = "bot"
 version = "0.1.0"
 description = ""
-authors = ["wasd_64 <wasd.rrre64@gmail.com>"]
+authors = [" <>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

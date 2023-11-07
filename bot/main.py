@@ -1,51 +1,16 @@
 import telebot
+from telebot import types, util
+
+from BotDB import *
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from telebot import types, util
+
+from docmaster import Docmaster
 import os
-from BotDB import *
 
 bot = telebot.TeleBot(os.environ['BOT_TOKEN'])
 db = create_engine("sqlite+pysqlite:///database")
 Base.metadata.create_all(db)
-
-
-class Docmaster:
-    __docs = None
-
-    def __init__(self):
-        self.__docs = []
-
-    def docs(self, name, description, role):
-        self.__docs.append({"name": name, "description": description, "role": role})
-
-        def decorator(func):
-            def wrapper(*args, **kwargs):
-                return func(*args, **kwargs)
-
-            return wrapper
-
-        return decorator
-
-    def print_user_funcs(self):
-        res = ""
-        for row in self.__docs:
-            if row["role"] == "user":
-                res += "<b>" + row["name"] + "</b>"
-                res += ' - '
-                res += row["description"]
-                res += '\n'
-        return res
-
-    def print_admin_funcs(self):
-        res = ""
-        for row in self.__docs:
-            res += "<b>" + row["name"] + "</b>"
-            res += ' - '
-            res += row["description"]
-            res += '\n'
-        return res
-
 
 docums = Docmaster()
 
@@ -54,12 +19,19 @@ docums = Docmaster()
                                         "requires name and secondname from user, delimiter = ' '", role='user')
 @bot.message_handler(commands=['start'])
 def start_func(message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    helper = types.KeyboardButton(text="/help")
+    user_info = types.KeyboardButton(text="/get_user_info")
+    keyboard.add(helper, user_info)
     bot.send_message(message.chat.id, "Это бот МТУСИ кружка по спортивному программированию "
-                                      "для отправки кода на различные проверяющие системы")
+                                      "для отправки кода на различные проверяющие системы\n"
+                                      "После регистрации ознакомьтесь с командой /help", reply_markup=keyboard)
     with Session(db) as session:
         if session.query(User).filter_by(telegram_id=int(message.from_user.id)).first() is None:
             msg = bot.send_message(message.chat.id, "Для регистрации ведите сначало имя, затем фамилию через пробел")
             bot.register_next_step_handler(msg, __register)
+        else:
+            bot.send_message(message.chat.id, "Вы уже зарегестрированы")
 
 
 def __register(message):
