@@ -86,22 +86,3 @@ class Sumbition(Base):
         return f"Sumbiotion(id={self.id!r}, user_id={self.user_id!r}, task_id={self.task_id!r}, status={self.status!r})"
 
 
-# class BotData:
-#     def __init__(self, url):
-#         self.engine = create_engine(url)
-#         Base.metadata.create_all(self.engine)
-#         self.session = Session(bind=self.engine)
-#
-#     def insert_into_table(self, table_name, records: list):
-#         self.session.execute(insert(table_name), records)
-#
-#     def table_sql_request(self, request):
-#         return self.session.execute(text(request)).all()
-
-
-'''
-if __name__ == '__main__':
-    bot_db = BotData("sqlite+pysqlite:///:memory:")
-    bot_db.insert_into_table(User, [{'id': 546, 'telegram_id': 123, 'name': 'Test', 'surname': 'Test'}])
-    print(bot_db.table_sql_request("SELECT * FROM user WHERE id = 546"))
-'''
