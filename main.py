@@ -1,8 +1,16 @@
 import logging
 import os
 
-from aiogram import Bot, Dispatcher
-from routers import *
+from aiogram import Bot, Dispatcher, Router
+import routers
+
+
+def add_routers(dp: Dispatcher):
+    router_type = type(Router())
+    for name in dir(routers):
+        probably_router = getattr(routers, name)
+        if type(probably_router) == router_type:
+            dp.include_router(probably_router)
 
 
 def main():
@@ -10,7 +18,8 @@ def main():
 
     bot = Bot(token=token)
     dp = Dispatcher()
-    dp.include_router(start_router)
+
+    add_routers(dp)
 
     dp.run_polling(bot)
 

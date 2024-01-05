@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from database import db, User
 from docmaster import docmaster
 
-start_router = Router()  # [1]
+start_router = Router()
 
 
 def init_keyboard() -> types.ReplyKeyboardMarkup:  # List[types.KeyboardButton]:
