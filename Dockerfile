@@ -3,7 +3,7 @@ FROM python:3.12-slim
 RUN mkdir -p /code
 WORKDIR /code
 COPY . /code
-ENV BOT_TOKEN=
+ENV BOT_TOKEN=${BOT_TOKEN}
 
 
 RUN pip install poetry

@@ -2,12 +2,15 @@
 name = "bot"
 version = "0.1.0"
 description = ""
-authors = ["wasd_64 <wasd.rrre64@gmail.com>"]
+authors = ["Nikita Kozlov <nukfeed@yandex.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
 telebot = "^0.0.5"
+sqlalchemy = "^2.0.22"
+aiogram = "^3.3.0"
+setuptools = "^69.0.3"
 
 
 [build-system]

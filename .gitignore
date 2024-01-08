@@ -1,2 +1,6 @@
 token.txt
 .idea
+database__
+
+__pycache__/
+**/__pycache__
