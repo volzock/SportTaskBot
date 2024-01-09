@@ -15,6 +15,7 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     surname: Mapped[str]
+    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
 
     def __repr__(self) -> str:
         return f"User(telegram_id = {self.telegram_id!r}, name={self.name!r}, surname={self.surname!r})"
@@ -30,27 +31,6 @@ class Role(Base):
         return f"Role(id={self.id!r}, name={self.name!r})"
 
 
-class RoleUser(Base):
-    __tablename__ = "role_table"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.telegram_id"))
-    role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
-
-    def __repr__(self) -> str:
-        return f"RoleUser(user_id={self.user_id!r}, role_id={self.role_id!r})"
-
-
-class Topic(Base):
-    __tablename__ = "topic"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
-
-    def __repr__(self) -> str:
-        return f"Topic(id={self.id!r}, name={self.name!r})"
-
-
 class Service(Base):
     __tablename__ = "service"
 
@@ -59,6 +39,19 @@ class Service(Base):
 
     def __repr__(self) -> str:
         return f"Service(id={self.id!r}, url={self.url!r})"
+
+
+class ServiceData(Base):
+    __tablename__ = "service_data"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    login: Mapped[str]
+    password: Mapped[str]
+    url: Mapped[str]
+    service_id: Mapped[int] = mapped_column(ForeignKey("service.id"))
+
+    def __repr__(self) -> str:
+        return f"ServiceData"
 
 
 class Task(Base):
